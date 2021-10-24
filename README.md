@@ -1,4 +1,4 @@
-# app_clone_checker
+# App Clone Checker
 
 A new Flutter plugin. - To Detect App Cloning 
 
