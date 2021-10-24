@@ -26,7 +26,10 @@ $ await AppCloneChecker.appOriginality("com.vignesh.app_clone_checker")
 }
 ```
 
-This project is Hosted in [PubDev](https://pub.dev/packages/app_clone_checker/)
+This project is hosted in [PubDev](https://pub.dev/packages/app_clone_checker/)
+
+Inspired from [ProAndroidDev](https://proandroiddev.com/preventing-android-app-cloning-e3194269bcfa) & [StackOverflow](https://stackoverflow.com/questions/48900083/preventing-an-android-app-being-cloned-by-an-app-cloner/67353578#67353578)
+
 
 This project is a starting point for a Flutter
 [plug-in package](https://flutter.dev/developing-packages/),
