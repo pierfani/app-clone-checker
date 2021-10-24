@@ -30,8 +30,8 @@ flutter:
       android:
         package: com.vignesh.app_clone_checker
         pluginClass: AppCloneCheckerPlugin
-      ios:
-        pluginClass: AppCloneCheckerPlugin
+#      ios:
+#        pluginClass: AppCloneCheckerPlugin
 
   # To add assets to your plugin package, add an assets section, like this:
   # assets:

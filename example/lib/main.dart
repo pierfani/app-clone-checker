@@ -54,7 +54,7 @@ class _MyAppState extends State<MyApp> {
     // Platform messages may fail, so we use a try/catch PlatformException.
     // We also handle the message potentially returning null.
     try {
-      platformVersion = await AppCloneChecker.appOriginality("com.vignesh.app_clone_checker") ?? 'Unknown platform version';
+      platformVersion = await AppCloneChecker.appOriginality("com.vignesh.app_clone_checker");
     } on PlatformException {
       platformVersion = 'Failed to get platform version.';
     }

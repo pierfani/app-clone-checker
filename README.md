@@ -2,7 +2,31 @@
 
 A new Flutter plugin. - To Detect App Cloning 
 
-## Getting Started
+## Usage
+
+**Note:** Only works with **Android**
+
+```sh
+$ await AppCloneChecker.appOriginality("com.vignesh.app_clone_checker")
+```
+
+### Success Response
+```sh
+{
+    "result" : "Success",
+    "message" : "Valid App"
+}
+```
+
+### Failure Response
+```sh
+{
+    "result" : "Failure",
+    "message" : "Cloned / In-Valid App" / "Application ID Not Passed"
+}
+```
+
+This project is Hosted in [PubDev](https://pub.dev/packages/app_clone_checker/)
 
 This project is a starting point for a Flutter
 [plug-in package](https://flutter.dev/developing-packages/),
