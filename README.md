@@ -7,7 +7,7 @@ A new Flutter plugin. - To Detect App Cloning
 **Note:** Only works with **Android**
 
 ```sh
-$ await AppCloneChecker.appOriginality("com.vignesh.app_clone_checker")
+await AppCloneChecker.appOriginality("com.vignesh.app_clone_checker")
 ```
 
 ### Success Response

@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
 import 'dart:async';
 
-import 'package:flutter/services.dart';
 import 'package:app_clone_checker/app_clone_checker.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 void main() {
   runApp(const MyApp());
@@ -50,14 +50,21 @@ class _MyAppState extends State<MyApp> {
 
   // Platform messages are asynchronous, so we initialize in an async method.
   Future<void> checkAppValid() async {
-    dynamic platformVersion;
+    dynamic pluginResponse;
     // Platform messages may fail, so we use a try/catch PlatformException.
     // We also handle the message potentially returning null.
     try {
-      platformVersion = await AppCloneChecker.appOriginality("com.vignesh.app_clone_checker");
+      pluginResponse = await AppCloneChecker.appOriginality(
+          "com.vignesh.app_clone_checker",
+          isWorkProfileAllowed: false);
+
+      var resultData = ResultData.fromJson(pluginResponse);
+      pluginResponse = resultData.message;
     } on PlatformException {
-      platformVersion = 'Failed to get platform version.';
+      pluginResponse = 'Failed to get result.';
     }
+
+
 
     // If the widget was removed from the tree while the asynchronous platform
     // message was in flight, we want to discard the reply rather than calling
@@ -65,7 +72,7 @@ class _MyAppState extends State<MyApp> {
     if (!mounted) return;
 
     setState(() {
-      _appOriginality = platformVersion;
+      _appOriginality = pluginResponse;
     });
   }
 
@@ -88,4 +95,25 @@ class _MyAppState extends State<MyApp> {
       ),
     );
   }
+}
+
+class ResultData {
+  ResultData({
+    this.result,
+    this.message,});
+
+  ResultData.fromJson(dynamic json) {
+    result = json['result'];
+    message = json['message'];
+  }
+  String? result;
+  String? message;
+
+  Map<String, dynamic> toJson() {
+    final map = <String, dynamic>{};
+    map['result'] = result;
+    map['message'] = message;
+    return map;
+  }
+
 }

@@ -1,9 +1,11 @@
 package com.vignesh.app_clone_checker
 
 import android.app.Activity
+import android.app.admin.DevicePolicyManager
+import android.content.ComponentName
+import android.content.Context
 import android.util.Log
 import androidx.annotation.NonNull
-
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
@@ -11,6 +13,7 @@ import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
+
 
 /** AppCloneCheckerPlugin */
 class AppCloneCheckerPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
@@ -37,11 +40,14 @@ class AppCloneCheckerPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
             }
 
             AppConstants.checkDeviceCloned -> {
+
                 val resultMap = mutableMapOf<String, String>()
 
                 var isValidApp = true
-                val applicationID = call.argument<String>(AppConstants.applicationID)
-                        ?: "" //"com.vignesh.app_clone_checker"
+                val applicationID = call.argument<String>(AppConstants.applicationID) ?: ""
+
+                val workProfileAllowedFlag: Boolean =
+                    call.argument<Boolean>(AppConstants.workProfileAllowedFlag) ?: true
 
                 if (applicationID.isBlank() || applicationID.isEmpty()) {
                     resultMap[AppConstants.responseResultKey] = AppConstants.failureID
@@ -50,18 +56,28 @@ class AppCloneCheckerPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                     return
                 }
 
-                val appPackageDotCount = applicationID.count { it == '.' }
-
                 myActivity?.let {
 
                     val path: String = it.filesDir.path
-                    if (path.contains(dualAppId999)) {
+                    //This will detect if app is accessed through Work Profile
+                    val devicePolicyManager =
+                        myActivity?.getSystemService(Context.DEVICE_POLICY_SERVICE) as DevicePolicyManager
+                    val activeAdmins: List<ComponentName>? = devicePolicyManager.activeAdmins
+
+                    if (applicationID != BuildConfig.LIBRARY_PACKAGE_NAME) {
+                        ///"Package Mismatch"
                         ///"Cloned App"
                         isValidApp = false
-                    } else {
-                        val count: Int = getDotCount(path, appPackageDotCount)
-                        if (count > appPackageDotCount) {
-                            ///"Cloned App"
+                    } else if (path.contains(dualAppId999)) {
+                        ///"Package Directory Mismatch"
+                        ///"Cloned App"
+                        isValidApp = false
+                    } else if (!workProfileAllowedFlag && activeAdmins != null) {
+                        ///"Used through Work Profile"
+                        ///"Cloned App"
+                        val gmsPackages =
+                            activeAdmins.filter { filter -> filter.packageName == "com.google.android.gms" };
+                        if (gmsPackages.size != activeAdmins.size) {
                             isValidApp = false
                         }
                     }
@@ -85,20 +101,6 @@ class AppCloneCheckerPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
             }
         }
     }
-
-    private fun getDotCount(path: String, appPackageDotCount: Int): Int {
-        var count = 0
-        for (element in path) {
-            if (count > appPackageDotCount) {
-                break
-            }
-            if (element == dot) {
-                count++
-            }
-        }
-        return count
-    }
-
 
     override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
         channel.setMethodCallHandler(null)

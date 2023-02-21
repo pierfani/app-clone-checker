@@ -11,9 +11,11 @@ class AppCloneChecker {
     return version;
   }
 
-  static Future<dynamic> appOriginality(String applicationID) async {
-    return await _channel.invokeMethod('checkDeviceCloned',{"applicationID" : applicationID});
+  static Future<dynamic> appOriginality(String applicationID,
+      {bool isWorkProfileAllowed = true}) async {
+    return await _channel.invokeMethod('checkDeviceCloned', {
+      "applicationID": applicationID,
+      "isWorkProfileAllowed": isWorkProfileAllowed
+    });
   }
-
-
 }

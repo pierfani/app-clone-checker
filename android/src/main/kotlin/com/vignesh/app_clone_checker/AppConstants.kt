@@ -5,6 +5,7 @@ object AppConstants {
     const val getPlatformVersion = "getPlatformVersion"
     const val checkDeviceCloned = "checkDeviceCloned"
     const val applicationID = "applicationID"
+    const val workProfileAllowedFlag = "isWorkProfileAllowed"
     const val successID = "Success"
     const val successMessage = "Valid App"
     const val failureID = "Failure"
