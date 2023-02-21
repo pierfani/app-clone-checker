@@ -63,23 +63,31 @@ class AppCloneCheckerPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                     val devicePolicyManager =
                         myActivity?.getSystemService(Context.DEVICE_POLICY_SERVICE) as DevicePolicyManager
                     val activeAdmins: List<ComponentName>? = devicePolicyManager.activeAdmins
+                    val appPackageDotCount = applicationID.count { it == '.' }
 
-                    if (applicationID != BuildConfig.LIBRARY_PACKAGE_NAME) {
+                    if (getDotCount(path, appPackageDotCount)>appPackageDotCount) {
                         ///"Package Mismatch"
                         ///"Cloned App"
                         isValidApp = false
+                        Log.d("AppCloneCheckerPlugin","Package ID Mismatch")
                     } else if (path.contains(dualAppId999)) {
                         ///"Package Directory Mismatch"
                         ///"Cloned App"
                         isValidApp = false
+                        Log.d("AppCloneCheckerPlugin","Package Mismatch")
                     } else if (!workProfileAllowedFlag && activeAdmins != null) {
                         ///"Used through Work Profile"
                         ///"Cloned App"
                         val gmsPackages =
                             activeAdmins.filter { filter -> filter.packageName == "com.google.android.gms" };
                         if (gmsPackages.size != activeAdmins.size) {
+                            Log.d("AppCloneCheckerPlugin","Work Mode")
                             isValidApp = false
+                        } else {
+
                         }
+                    } else {
+
                     }
 
                 }
@@ -101,6 +109,20 @@ class AppCloneCheckerPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
             }
         }
     }
+
+    private fun getDotCount(path: String, appPackageDotCount: Int): Int {
+        var count = 0
+        for (element in path) {
+            if (count > appPackageDotCount) {
+                break
+            }
+            if (element == dot) {
+                count++
+            }
+        }
+        return count
+    }
+
 
     override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
         channel.setMethodCallHandler(null)
