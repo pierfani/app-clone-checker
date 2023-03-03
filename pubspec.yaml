@@ -1,6 +1,6 @@
 name: app_clone_checker
 description: A new Flutter plugin. - To Detct App Cloning 
-version: 2.0.1
+version: 2.0.2
 homepage: https://github.com/vickyponraj/app-clone-checker
 
 environment:

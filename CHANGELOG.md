@@ -20,3 +20,8 @@
 * Added Support to detect Work Profile in Android
 * Bug Fixes
 * Readme Updated
+
+##2.0.2
+
+* Samsung Device Identification Fixes
+* Readme Updated

@@ -4,6 +4,7 @@ import android.app.Activity
 import android.app.admin.DevicePolicyManager
 import android.content.ComponentName
 import android.content.Context
+import android.os.Build
 import android.util.Log
 import androidx.annotation.NonNull
 import io.flutter.embedding.engine.plugins.FlutterPlugin
@@ -78,13 +79,24 @@ class AppCloneCheckerPlugin : FlutterPlugin, MethodCallHandler, ActivityAware {
                     } else if (!workProfileAllowedFlag && activeAdmins != null) {
                         ///"Used through Work Profile"
                         ///"Cloned App"
-                        val gmsPackages =
-                            activeAdmins.filter { filter -> filter.packageName == "com.google.android.gms" };
-                        if (gmsPackages.size != activeAdmins.size) {
-                            Log.d("AppCloneCheckerPlugin","Work Mode")
-                            isValidApp = false
-                        } else {
+                        val gmsPackages = activeAdmins.filter { filter -> filter.packageName == "com.google.android.gms" }
+                        val samsungDevice = activeAdmins.any { filter -> filter.packageName.contains("com.samsung") }
 
+                        if(samsungDevice){
+                            activeAdmins.forEach { admin ->
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                                    if (devicePolicyManager.isProfileOwnerApp(admin.packageName)) {
+                                        isValidApp = false
+                                    }
+                                }
+                            }
+                        }else{
+                            if (gmsPackages.size != activeAdmins.size) {
+                                Log.d("AppCloneCheckerPlugin", "Work Mode")
+                                isValidApp = false
+                            } else {
+
+                            }
                         }
                     } else {
 
