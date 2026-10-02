@@ -25,3 +25,10 @@
 
 * Samsung Device Identification Fixes
 * Readme Updated
+
+## 2.0.4
+
+* **Breaking:** Require Flutter 3.47.
+* Remove the plugin-owned Kotlin Gradle Plugin so host apps can use Android
+  Gradle Plugin 9's built-in Kotlin support.
+* Compile for Java/Kotlin 17 instead of 1.8.
